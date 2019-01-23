@@ -34,5 +34,11 @@ public class ChatWindow extends JFrame {
                 storyOfChat.setText(message.getText());
             }
         });
+        message.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                storyOfChat.setText(message.getText());
+            }
+        });
     }
 }
