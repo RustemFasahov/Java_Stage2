@@ -28,8 +28,8 @@ public class Client extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         autorizationPanel = new JPanel(new GridLayout(3,1));
         chatPanel = new JPanel(new GridLayout(3,1));
-        loginField = new JTextField("User1");
-        passwordField = new JTextField("Pass1");
+        loginField = new JTextField("Логин");
+        passwordField = new JTextField("Пароль");
         textArea = new JTextArea();
         textArea.setLineWrap(true);
         textArea.setEditable(false);
@@ -49,22 +49,19 @@ public class Client extends JFrame {
         add(autorizationPanel);
 
         try {
-            socket = new Socket(HOST,PORT);
+            conection();
             in = new Scanner(socket.getInputStream());
             out = new PrintWriter(socket.getOutputStream(),true);
-//            setAutorised(false);
             Thread t = new Thread(()-> {
                 try{
                     while (true){
                         String str = in.nextLine();
                         if(str.startsWith("/authok")){
-//                            setAutorised(true);
                             remove(autorizationPanel);
                             add(chatPanel);
                             repaint();
                             revalidate();
                             break;
-
                         }
                         loginField.setText(str);
                         textArea.append(str + "\n");
@@ -83,10 +80,9 @@ public class Client extends JFrame {
                         e.printStackTrace();
                     }
                 }
-//                setAuthorised(false);
             });
             t.start();
-//            t.setDaemon(true);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -116,6 +112,14 @@ public class Client extends JFrame {
     public void sendMessage(){
         out.println(textField.getText());
         textField.setText("");
+    }
+
+    public void conection(){
+        try {
+            socket = new Socket(HOST,PORT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
